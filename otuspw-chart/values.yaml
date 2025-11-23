@@ -1,0 +1,37 @@
+postgresql:
+  global:
+    postgresql:
+      auth:
+        existingSecret: "{{ .Release.Name }}-pgsecret"
+        username: rustam
+        database: dz8_base
+  metrics:
+    enabled: false
+    image:
+      repository: bitnamilegacy/postgres-exporter
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/bitnami-shell
+
+metrics:
+  serviceMonitor:
+    enabled: false
+
+replicaCount: 1
+
+image:
+  billingServiceImage: rustamalimuradov/billing-service:v7
+  deliveryServiceImage: rustamalimuradov/delivery-service:v9
+  orderServiceImage: rustamalimuradov/order-service:v14
+  storageServiceImage: rustamalimuradov/storage-service:v7
+  fbeServiceImage: rustamalimuradov/fbe-service:v7
+
+service:
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+
+ingress:
+  enabled: true

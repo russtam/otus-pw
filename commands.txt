@@ -1,0 +1,7 @@
+helm install otuspw otuspw-chart
+helm install otuspw otuspw-chart --dry-run
+helm uninstall otuspw
+kubectl delete pvc data-otuspw-postgresql-0
+
+KEYCLOAK_ISSUER_URI=http://keycloak.192.168.49.2.nip.io/realms/external;
+KEYCLOAK_PROVIDER=external;

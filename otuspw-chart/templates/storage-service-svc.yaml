@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-storage-service-svc
+  labels:
+    env: {{ .Release.Name }}-storage-service-svc
+spec:
+  selector:
+    env: {{ .Release.Name }}-storage-service
+  ports:
+    - protocol: TCP
+      name: metrics
+      port: {{ .Values.service.port | default 8000 }}
+      targetPort: {{ .Values.service.targetPort | default 8000 }}
+  type: {{ .Values.service.type | default "ClusterIP" }}

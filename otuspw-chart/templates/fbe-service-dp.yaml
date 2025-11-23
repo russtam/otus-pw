@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-fbe-service-dp
+  labels:
+    app: {{ .Release.Name }}-fbe-service-dp
+spec:
+  replicas: {{ .Values.replicaCount | default 2 }}
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      env: {{ .Release.Name }}-fbe-service
+  template:
+    metadata:
+      labels:
+        env: {{ .Release.Name }}-fbe-service
+    spec:
+      containers:
+        - name: fbe-service
+          image: {{ .Values.image.fbeServiceImage }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 1
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            terminationGracePeriodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 10
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            terminationGracePeriodSeconds: 10
+          env:
+            - name: ORDER_SERVICE_HOST
+              value: "{{ .Release.Name }}-order-service-svc"
+            - name: JDBC_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.global.postgresql.auth.database }}
+            - name: DB_USERNAME
+              value: {{ .Values.postgresql.global.postgresql.auth.username }}
+            - name: APP_HTTP_PORT
+              value: {{ .Values.service.targetPort | quote }}
+            - name: .DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-pgsecret"
+                  key: password
+            - name: RABBITMQ_HOST
+              value: "{{ .Release.Name }}-rabbitmq-service"
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-rabbitmq-secret"
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-rabbitmq-secret"
+                  key: password
+            - name: KEYCLOAK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-kcsecret"
+                  key: secret
+            - name: KEYCLOAK_CLIENT_ID
+              value: "external-client"
+            - name: KEYCLOAK_CLIENT_NAME
+              value: "external-client"
+            - name: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.192.168.49.2.nip.io/realms/external"
+            - name: KEYCLOAK_PROVIDER
+              value: "external"
+          volumeMounts:
+          - name: config
+            mountPath: "/config"
+            readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+            items:
+              - key: "db.yaml"
+                path: "db.yaml"

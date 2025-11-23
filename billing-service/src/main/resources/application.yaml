@@ -1,0 +1,38 @@
+appCfgPath: ${APP_CONFIG_PATH:/config}
+
+spring:
+  application:
+    name: billing-service
+  config:
+    import:
+      - file:${appCfgPath}/db.yaml
+  rabbitmq:
+    connection-timeout: 10000
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    distribution:
+      slo:
+        http.server.requests: 10ms, 50ms, 100ms, 200ms, 300ms, 400ms, 500ms, 600ms, 800ms
+    export:
+      prometheus:
+        enabled: true
+
+server:
+  port: ${APP_HTTP_PORT:8000}
+
+logging:
+  level:
+    root: "info"
+    ru.rustam: "debug"

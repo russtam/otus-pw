@@ -1,0 +1,30 @@
+/* styles.css */
+nav {
+    margin-bottom: 20px;
+}
+img {
+    max-width: 150px;
+    height: auto;
+}
+button.add-to-cart {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+.price {
+    font-family: "Myriad Pro", "sans-serif";
+    font-size: 14pt;
+    font-weight: bold;
+    color: #32CD32;
+}
+.prof {
+    font-family: "Myriad Pro", "sans-serif";
+    font-size: 12pt;
+    font-weight: bold;
+    color: #000000;
+}
