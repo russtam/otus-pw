@@ -1,37 +1,45 @@
 package ru.rustam.otus.fbbe.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import ru.rustam.otus.fbbe.model.Product;
 import ru.rustam.otus.fbbe.service.ProductService;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    private static final List<Product> products = List.of(
-            new Product(1L, "CAT", BigDecimal.valueOf(200), "/images/cat.jpeg"),
-            new Product(2L, "DOG", BigDecimal.valueOf(500), "/images/cat.jpeg"),
-            new Product(3L, "Сковородка алюминиевая, 26см", BigDecimal.valueOf(500), "/images/cat.jpeg")
-    );
+    @Value("${storageServiceHost}")
+    private String STORAGE_SERVICE_URL;
+    private final RestTemplate restTemplate;
 
     @Override
     public List<Product> getAllProducts() {
-        return products;
+        ParameterizedTypeReference<List<Product>> typeRef =
+                new ParameterizedTypeReference<>() {
+                };
+        return restTemplate.exchange(STORAGE_SERVICE_URL + "/products",
+                HttpMethod.GET, HttpEntity.EMPTY, typeRef).getBody();
     }
 
     @Override
     public Optional<Product> getProductById(long productId) {
-        for (Product product : products) {
-            if (productId == product.getId()) {
-                return Optional.of(product);
-            }
-        }
-        return Optional.empty();
+        var product = restTemplate.exchange(STORAGE_SERVICE_URL + "/product/{productId}",
+                        HttpMethod.GET, HttpEntity.EMPTY, Product.class,
+                        Map.of("productId", "" + productId))
+                .getBody();
+        return product != null ? Optional.of(product) : Optional.empty();
     }
 
 }

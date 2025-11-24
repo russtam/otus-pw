@@ -27,6 +27,8 @@ public class Order {
     public String getPrintableStatus() {
         return switch (status) {
             case "CREATED" -> "Создан";
+            case "CANCELED" -> "Отменён";
+            case "COMPLETED" -> "Завершён";
             case "AWAIT_PAYMENT" -> "Ожидает оплаты";
             default -> status;
         };

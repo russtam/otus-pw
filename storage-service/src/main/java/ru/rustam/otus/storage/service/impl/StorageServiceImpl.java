@@ -9,6 +9,7 @@ import ru.rustam.otus.rabbitmq.model.OrderMessage;
 import ru.rustam.otus.rabbitmq.service.MessageService;
 import ru.rustam.otus.storage.db.StorageItemEntity;
 import ru.rustam.otus.storage.db.StorageItemRepository;
+import ru.rustam.otus.storage.exceptions.StorageException;
 import ru.rustam.otus.storage.service.StorageService;
 
 import java.util.List;
@@ -61,6 +62,18 @@ public class StorageServiceImpl implements StorageService {
             entity.setReserved(entity.getReserved() - msgItem.getCount());
         }
         storageItemRepository.saveAll(foundList);
+    }
+
+    @Override
+    public List<StorageItemEntity> getProducts() {
+        return storageItemRepository.findAll();
+    }
+
+    @Override
+    public StorageItemEntity getProduct(long productId) {
+        return storageItemRepository
+                .findById(productId)
+                .orElseThrow(() -> new StorageException("Not found"));
     }
 
 }

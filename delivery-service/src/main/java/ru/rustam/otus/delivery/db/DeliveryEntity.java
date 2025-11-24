@@ -30,7 +30,7 @@ public class DeliveryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliveryId;
 
-    private long orderId;
+    private String orderId;
 
     @Column(name = "delivery_date")
     private OffsetDateTime deliveryDate;

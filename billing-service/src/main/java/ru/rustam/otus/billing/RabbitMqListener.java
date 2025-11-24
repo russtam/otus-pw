@@ -28,7 +28,7 @@ public class RabbitMqListener {
             paymentService.makePayment(message);
             log.info("Order with id={} is payed", message.getOrderId());
         } catch (Exception e) {
-            log.error("Exception while making payment for order {}", message.getOrderId());
+            log.error("Exception while making payment for order {}", message.getOrderId(), e);
             FailMessage failMessage = new FailMessage();
             failMessage.setOrderId(message.getOrderId());
             failMessage.setError("Payment error: " + e);

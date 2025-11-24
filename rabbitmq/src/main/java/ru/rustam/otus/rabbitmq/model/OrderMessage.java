@@ -20,10 +20,12 @@ import java.util.List;
 public class OrderMessage {
 
     private String orderId;
+    private String userName;
     private BigDecimal amount;
     private List<OrderItemMessage> items;
     private String deliveryAddress;
     private String contactPhone;
+    private String email;
     private String status;
 
 }

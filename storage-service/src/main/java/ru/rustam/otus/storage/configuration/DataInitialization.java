@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.rustam.otus.storage.db.StorageItemEntity;
 import ru.rustam.otus.storage.db.StorageItemRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -23,9 +24,9 @@ public class DataInitialization {
         if (storageItemRepository.count() <= 0) {
             //инициализируем тестовыми данными
             List<StorageItemEntity> testDataList = List.of(
-                    new StorageItemEntity("PlayStation 5", 100, 0),
-                    new StorageItemEntity("SteamDeck", 10, 0),
-                    new StorageItemEntity("X-BOX 360", 20, 0)
+                    new StorageItemEntity("PlayStation 5", BigDecimal.valueOf(90000), 100, 0, "/images/cat.jpeg"),
+                    new StorageItemEntity("SteamDeck", BigDecimal.valueOf(50000), 10, 0, "/images/cat.jpeg"),
+                    new StorageItemEntity("X-BOX 360", BigDecimal.valueOf(100000), 20, 0, "/images/cat.jpeg")
             );
             storageItemRepository.saveAllAndFlush(testDataList);
         }

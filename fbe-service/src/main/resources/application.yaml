@@ -1,6 +1,7 @@
 appCfgPath: ${APP_CONFIG_PATH:/config}
 
 orderServiceHost: "http://${ORDER_SERVICE_HOST:otuspw-order-service-svc}:8000"
+storageServiceHost: "http://${STORAGE_SERVICE_HOST:otuspw-storage-service-svc}:8000"
 
 spring:
   application:

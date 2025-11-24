@@ -31,7 +31,7 @@ public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    private long orderId;
+    private String orderId;
 
     @Column(name = "payment_date")
     private OffsetDateTime paymentDate;

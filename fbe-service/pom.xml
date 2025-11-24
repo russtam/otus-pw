@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>fbe-service</artifactId>
-	<version>v7</version>
+	<version>v10</version>
 	<name>Frontend Backend Service</name>
 
 	<properties>

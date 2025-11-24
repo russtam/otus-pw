@@ -44,6 +44,8 @@ spec:
           env:
             - name: ORDER_SERVICE_HOST
               value: "{{ .Release.Name }}-order-service-svc"
+            - name: STORAGE_SERVICE_HOST
+              value: "{{ .Release.Name }}-storage-service-svc"
             - name: JDBC_URL
               value: jdbc:postgresql://{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.global.postgresql.auth.database }}
             - name: DB_USERNAME
