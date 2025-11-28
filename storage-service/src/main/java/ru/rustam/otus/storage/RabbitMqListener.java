@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import ru.rustam.otus.rabbitmq.model.FailMessage;
 import ru.rustam.otus.rabbitmq.model.OrderMessage;
-import ru.rustam.otus.rabbitmq.service.MessageService;
+import ru.rustam.otus.rabbitmq.service.RabbitService;
 import ru.rustam.otus.storage.service.StorageService;
 
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.ORDER_CREATED_QUEUE;
@@ -20,7 +20,7 @@ public class RabbitMqListener {
     private static final String SOURCE = "storage-service";
 
     private final StorageService storageService;
-    private final MessageService messageService;
+    private final RabbitService rabbitService;
 
     @RabbitListener(queues = FAIL_QUEUE)
     public void failMessageListener(FailMessage message) {
@@ -50,7 +50,7 @@ public class RabbitMqListener {
             failMessage.setError("Reserve error: " + e);
             failMessage.setOrder(message);
             failMessage.setSource(SOURCE);
-            messageService.sendFailMessage(failMessage);
+            rabbitService.sendFailMessage(failMessage);
         }
     }
 

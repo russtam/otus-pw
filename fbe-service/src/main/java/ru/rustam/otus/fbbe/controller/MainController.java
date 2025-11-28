@@ -11,17 +11,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import ru.rustam.otus.common.model.ClientMessageDto;
+import ru.rustam.otus.common.service.ClientMessageService;
+import ru.rustam.otus.common.service.OrderClientService;
 import ru.rustam.otus.fbbe.model.CartProduct;
-import ru.rustam.otus.fbbe.model.Product;
 import ru.rustam.otus.fbbe.service.CartService;
-import ru.rustam.otus.fbbe.service.OrderService;
+import ru.rustam.otus.fbbe.service.FbeService;
 import ru.rustam.otus.fbbe.service.ProductService;
+import ru.rustam.otus.rabbitmq.model.PaymentResultMessage;
+import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -34,7 +38,10 @@ public class MainController {
 
     private final CartService cartService;
     private final ProductService productService;
-    private final OrderService orderService;
+    private final FbeService fbeService;
+    private final RabbitService rabbitService;
+    private final OrderClientService orderClientService;
+    private final ClientMessageService clientMessageService;
 
     @GetMapping("/")
     public String root() {
@@ -89,8 +96,18 @@ public class MainController {
     public String orders(Model model) {
         log.debug("/orders");
         var userName = getUserName();
-        model.addAttribute("orders", orderService.getAllClientOrders(userName));
+        model.addAttribute("orders", fbeService.getAllClientOrders(userName));
         return "orders";
+    }
+
+    @GetMapping("/messages")
+    public String messages(Model model) {
+        log.debug("/messages");
+        var userName = getUserName();
+        var clientMessages = clientMessageService.getAllClientMessages(userName);
+        clientMessages.sort(Comparator.comparing(ClientMessageDto::getCreated));
+        model.addAttribute("messages", clientMessages);
+        return "messages";
     }
 
     @GetMapping("/createOrder")
@@ -98,9 +115,36 @@ public class MainController {
         log.debug("/createOrder");
         var userName = getUserName();
         String orderId = LocalDateTime.now().format(DTF_ORDER_ID) + "-" + COUNTER.getAndIncrement();
-        orderService.createOrder(orderId, userName);
+        fbeService.createOrder(orderId, userName);
         model.addAttribute("orderId", orderId);
         return "ordercreated";
+    }
+
+    @GetMapping("/payresult")
+    public String payresult(Model model,
+                            @RequestParam(value = "action") String action,
+                            @RequestParam(value = "orderId") String orderId,
+                            @RequestParam(value = "paymentId") String paymentId) {
+        log.debug("/payresult");
+        var userName = getUserName();
+        rabbitService.sendPaymentResultMessage(PaymentResultMessage.builder()
+                .orderId(orderId)
+                .paymentId(paymentId)
+                .success(action.equals("pay"))
+                .build());
+        return "redirect:orders";
+    }
+
+    @GetMapping("/payment")
+    public String payment(Model model,
+                          @RequestParam(value = "orderId") String orderId,
+                          @RequestParam(value = "paymentId") String paymentId) {
+        log.debug("/payment");
+        var order = orderClientService.getOrder(orderId);
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("paymentId", paymentId);
+        model.addAttribute("amount", order.getAmount());
+        return "payment";
     }
 
     @GetMapping("/api/addToCart")

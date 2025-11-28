@@ -22,11 +22,12 @@ metrics:
 replicaCount: 1
 
 image:
-  billingServiceImage: rustamalimuradov/billing-service:v8
-  deliveryServiceImage: rustamalimuradov/delivery-service:v10
-  orderServiceImage: rustamalimuradov/order-service:v15
-  storageServiceImage: rustamalimuradov/storage-service:v8
-  fbeServiceImage: rustamalimuradov/fbe-service:v9
+  billingServiceImage: rustamalimuradov/billing-service:v11
+  deliveryServiceImage: rustamalimuradov/delivery-service:v12
+  orderServiceImage: rustamalimuradov/order-service:v18
+  storageServiceImage: rustamalimuradov/storage-service:v9
+  fbeServiceImage: rustamalimuradov/fbe-service:v18
+  clientMessagingServiceImage: rustamalimuradov/client-messaging-service:v3
 
 service:
   type: ClusterIP

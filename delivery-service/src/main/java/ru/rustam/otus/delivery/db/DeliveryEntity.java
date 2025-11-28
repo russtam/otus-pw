@@ -16,7 +16,7 @@ import lombok.ToString;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "payments_tbl")
+@Table(name = "delivery_tbl")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

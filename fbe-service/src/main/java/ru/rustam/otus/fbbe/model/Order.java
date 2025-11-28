@@ -22,6 +22,7 @@ public class Order {
     private String contactPhone;
     private String email;
     private String status;
+    private String paymentLink;
 
     @JsonIgnore
     public String getPrintableStatus() {

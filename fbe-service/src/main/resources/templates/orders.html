@@ -30,7 +30,11 @@
             <td><p th:text="*{orderId}"></p></td>
             <td><p class="price">[[*{amount}]] ₽</p></td>
             <td><p th:text="*{printableStatus}"></p></td>
-            <td></td>
+            <td>
+                <p th:if="*{paymentLink != null && status == 'AWAIT_PAYMENT'}">
+                    <a th:href="*{paymentLink}">Оплатить</a>
+                </p>
+            </td>
         </tr>
     </table>
     <br/>

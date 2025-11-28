@@ -10,14 +10,14 @@
     </parent>
 
     <artifactId>delivery-service</artifactId>
-    <version>v10</version>
+    <version>v12</version>
     <name>Delivery service</name>
 
     <dependencies>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>rabbitmq</artifactId>
-            <version>v10</version>
+            <version>v12</version>
         </dependency>
 
         <dependency>
@@ -99,7 +99,7 @@
                         <image>rustamalimuradov/${project.artifactId}:${project.version}</image>
                     </to>
                     <container>
-                        <mainClass>ru.rustam.otus.delivery.DeliveryServiceApp</mainClass>
+                        <mainClass>ru.rustam.otus.delivery.MessagingServiceApp</mainClass>
                         <ports>
                             <port>8000</port>
                         </ports>

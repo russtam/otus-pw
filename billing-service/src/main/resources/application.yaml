@@ -1,5 +1,9 @@
 appCfgPath: ${APP_CONFIG_PATH:/config}
 
+paymentLink: "http://arch.homework/payment?paymentId="
+
+orderServiceHost: "http://${ORDER_SERVICE_HOST:otuspw-order-service-svc}:8000"
+
 spring:
   application:
     name: billing-service

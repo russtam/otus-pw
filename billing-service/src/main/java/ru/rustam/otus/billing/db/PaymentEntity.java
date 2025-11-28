@@ -28,8 +28,7 @@ public class PaymentEntity {
 
     @Id
     @Column(name = "payment_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentId;
+    private String paymentId;
 
     private String orderId;
 

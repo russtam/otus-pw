@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-client-messaging-service-dp
+  labels:
+    app: {{ .Release.Name }}-client-messaging-service-dp
+spec:
+  replicas: {{ .Values.replicaCount | default 2 }}
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      env: {{ .Release.Name }}-client-messaging-service
+  template:
+    metadata:
+      labels:
+        env: {{ .Release.Name }}-client-messaging-service
+    spec:
+      containers:
+        - name: client-messaging-service
+          image: {{ .Values.image.clientMessagingServiceImage }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 1
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            terminationGracePeriodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 10
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            terminationGracePeriodSeconds: 10
+          env:
+            - name: JDBC_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.global.postgresql.auth.database }}
+            - name: DB_USERNAME
+              value: {{ .Values.postgresql.global.postgresql.auth.username }}
+            - name: APP_HTTP_PORT
+              value: {{ .Values.service.targetPort | quote }}
+            - name: .DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-pgsecret"
+                  key: password
+            - name: RABBITMQ_HOST
+              value: "{{ .Release.Name }}-rabbitmq-service"
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-rabbitmq-secret"
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-rabbitmq-secret"
+                  key: password
+          volumeMounts:
+          - name: config
+            mountPath: "/config"
+            readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+            items:
+              - key: "db.yaml"
+                path: "db.yaml"

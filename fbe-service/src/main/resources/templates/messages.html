@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+</head>
+<body>
+<center>
+    <h1>ИНТЕРНЕТ МАГАЗИН</h1>
+    <br/>
+    <table width="60%" align="center">
+        <tr>
+        <tr>
+            <th><a href="/index">Каталог</a></th>
+            <th><a href="/profile">Профиль</a></th>
+            <th><a href="/cart">Корзина</a></th>
+            <th><a href="/orders">Заказы</a></th>
+            <th><a href="/logout">Выход</a></th>
+        </tr>
+        </tr>
+    </table>
+    <br/>
+    <h2>Сообщения</h2>
+    <br/>
+
+    <table style="border-spacing: 16px;">
+        <tr>
+            <th>Дата и время</th>
+            <th>Сообщение</th>
+        </tr>
+        <tr th:each="message : ${messages}" th:object="${message}">
+            <td><p th:text="*{created}"></p></td>
+            <td><p th:text="*{message}"></p></p></td>
+        </tr>
+    </table>
+    <br/>
+
+</center>
+
+</body>
+</html>

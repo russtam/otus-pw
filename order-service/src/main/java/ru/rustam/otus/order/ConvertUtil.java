@@ -25,6 +25,7 @@ public class ConvertUtil {
         dst.setDeliveryAddress(src.getDeliveryAddress());
         dst.setItems(convertItemDtoList(src.getItems()));
         dst.setStatus(src.getStatus());
+        dst.setPaymentLink(src.getPaymentLink());
         return dst;
     }
 
@@ -52,6 +53,7 @@ public class ConvertUtil {
         dst.setDeliveryAddress(src.getDeliveryAddress());
         dst.setItems(convertItemList(src.getItems()));
         dst.setStatus(src.getStatus());
+        dst.setPaymentLink(src.getPaymentLink());
         return dst;
     }
 

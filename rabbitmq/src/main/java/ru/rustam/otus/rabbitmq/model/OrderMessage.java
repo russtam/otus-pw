@@ -27,5 +27,6 @@ public class OrderMessage {
     private String contactPhone;
     private String email;
     private String status;
+    private String paymentLink;
 
 }

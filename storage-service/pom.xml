@@ -10,14 +10,14 @@
     </parent>
 
     <artifactId>storage-service</artifactId>
-    <version>v8</version>
+    <version>v9</version>
     <name>Storage service</name>
 
     <dependencies>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>rabbitmq</artifactId>
-            <version>v10</version>
+            <version>v12</version>
         </dependency>
 
         <dependency>

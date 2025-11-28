@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>rabbitmq</artifactId>
-    <version>v10</version>
+    <version>v12</version>
     <name>RabbitMQ Library</name>
 
     <dependencies>

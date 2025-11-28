@@ -2,39 +2,32 @@ package ru.rustam.otus.fbbe.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import ru.rustam.otus.fbbe.model.Order;
-import ru.rustam.otus.fbbe.model.OrderItem;
+import ru.rustam.otus.common.model.OrderDto;
+import ru.rustam.otus.common.model.OrderItemDto;
+import ru.rustam.otus.common.service.OrderClientService;
 import ru.rustam.otus.fbbe.service.CartService;
-import ru.rustam.otus.fbbe.service.OrderService;
+import ru.rustam.otus.fbbe.service.FbeService;
+import ru.rustam.otus.rabbitmq.model.ClientMessage;
+import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OrderServiceImpl implements OrderService {
+public class FbeServiceImpl implements FbeService {
 
-    @Value("${orderServiceHost}")
-    private String ORDER_SERVICE_URL;
-    private final RestTemplate restTemplate;
+
     private final CartService cartService;
+    private final OrderClientService orderClientService;
+    private final RabbitService rabbitService;
 
     @Override
-    public List<Order> getAllClientOrders(String userName) {
-        ParameterizedTypeReference<List<Order>> typeRef =
-                new ParameterizedTypeReference<>() {
-                };
-        return restTemplate.exchange(ORDER_SERVICE_URL + "/orders/{userName}",
-                HttpMethod.GET, HttpEntity.EMPTY, typeRef, Map.of("userName", userName)).getBody();
+    public List<OrderDto> getAllClientOrders(String userName) {
+        return orderClientService.getAllClientOrders(userName);
     }
 
     @Override
@@ -44,9 +37,9 @@ public class OrderServiceImpl implements OrderService {
                 .getAuthentication()
                 .getPrincipal());
         var items = cart.getProducts().stream()
-                .map(cp -> new OrderItem(cp.getProductId(), cp.getCount()))
+                .map(cp -> new OrderItemDto(cp.getProductId(), cp.getCount()))
                 .toList();
-        var orderToSend = Order.builder()
+        var orderDto = OrderDto.builder()
                 .orderId(orderId)
                 .userName(userName)
                 .contactPhone(user.getAttribute("contact_phone"))
@@ -55,9 +48,14 @@ public class OrderServiceImpl implements OrderService {
                 .amount(cart.calculateAmount())
                 .items(items)
                 .build();
-        var res = restTemplate.postForObject(ORDER_SERVICE_URL + "/order", orderToSend, Order.class);
-        log.debug("Response: {}", res);
+        orderClientService.createOrder(orderDto);
         cartService.clearCart(userName);
+        rabbitService.sendClientMessage(ClientMessage.builder()
+                .contactPhone(orderDto.getContactPhone())
+                .userName(userName)
+                .email(orderDto.getEmail())
+                .message("Создан заказ №" + orderId + " на сумму " + orderDto.getAmount() + " руб.")
+                .build());
     }
 
 

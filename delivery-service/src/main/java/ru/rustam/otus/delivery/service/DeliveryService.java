@@ -1,9 +1,9 @@
 package ru.rustam.otus.delivery.service;
 
-import ru.rustam.otus.rabbitmq.model.OrderMessage;
+import ru.rustam.otus.rabbitmq.model.PaymentCompletedMessage;
 
 public interface DeliveryService {
 
-    void startDelivery(OrderMessage message);
+    void startDelivery(PaymentCompletedMessage message);
 
 }

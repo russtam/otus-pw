@@ -16,6 +16,8 @@ public interface OrderService {
 
     void updateOrder(String orderId, OrderEntity order);
 
+    void saveOrder(OrderEntity order);
+
     void updateOrderStatus(String orderId, String newStatus);
 
 }

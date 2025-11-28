@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rustam.otus.rabbitmq.model.OrderItemMessage;
 import ru.rustam.otus.rabbitmq.model.OrderMessage;
-import ru.rustam.otus.rabbitmq.service.MessageService;
+import ru.rustam.otus.rabbitmq.service.RabbitService;
 import ru.rustam.otus.storage.db.StorageItemEntity;
 import ru.rustam.otus.storage.db.StorageItemRepository;
 import ru.rustam.otus.storage.exceptions.StorageException;
@@ -20,7 +20,7 @@ import java.util.List;
 public class StorageServiceImpl implements StorageService {
 
     private final StorageItemRepository storageItemRepository;
-    private final MessageService messageService;
+    private final RabbitService rabbitService;
 
     @Override
     @Transactional
@@ -43,7 +43,7 @@ public class StorageServiceImpl implements StorageService {
         }
         storageItemRepository.saveAll(foundList);
         //Зарезервировали, шлём дальше на оплату
-        messageService.sendOrderReservedMessage(message);
+        rabbitService.sendOrderReservedMessage(message);
     }
 
     @Override

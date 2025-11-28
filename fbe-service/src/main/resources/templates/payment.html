@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+</head>
+<body>
+<center>
+    <h1>ЗЕЛЁНЫЙ БАНК</h1>
+    <br/>
+    <br/>
+    <h2>Оплата заказа [[*{orderId}]]</h2>
+    <br/>
+    <p>Сумма к оплате: [[*{amount}]] ₽</p>
+    <br/>
+    <form action="payresult">
+        <input type="hidden" id="orderId" name="orderId" th:value="*{orderId}"/>
+        <input type="hidden" id="paymentId" name="paymentId" th:value="*{paymentId}"/>
+        <button type="submit" name="action" value="pay">Оплатить</button>
+        <button type="submit" name="action" value="cancel">Отменить</button>
+    </form>
+</center>
+
+</body>
+</html>

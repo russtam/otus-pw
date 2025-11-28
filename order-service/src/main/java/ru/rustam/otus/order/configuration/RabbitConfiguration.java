@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.FAIL_FANOUT_EXCHANGE;
+import static ru.rustam.otus.rabbitmq.configuration.QueueConst.PAYMENT_CREATED_FANOUT_EXCHANGE;
 
 @Configuration
 public class RabbitConfiguration {
 
     public static final String FAIL_QUEUE = "FailQueue-OrderService";
+    public static final String PAYMENT_CREATED_QUEUE = "PaymentCreatedQueue-OrderService";
 
     @Autowired
     private AmqpAdmin amqpAdmin;
@@ -23,6 +25,12 @@ public class RabbitConfiguration {
         var queue = new Queue(FAIL_QUEUE, false);
         amqpAdmin.declareQueue(queue);
         var exchange = new FanoutExchange(FAIL_FANOUT_EXCHANGE);
+        amqpAdmin.declareExchange(exchange);
+        amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange));
+        //
+        queue = new Queue(PAYMENT_CREATED_QUEUE, false);
+        amqpAdmin.declareQueue(queue);
+        exchange = new FanoutExchange(PAYMENT_CREATED_FANOUT_EXCHANGE);
         amqpAdmin.declareExchange(exchange);
         amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange));
     }

@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.rustam.otus.order.db.OrderEntity;
 import ru.rustam.otus.order.db.OrderRepository;
-import ru.rustam.otus.order.exceptions.OrderNotFoundException;
+import ru.rustam.otus.order.exceptions.OrderException;
 import ru.rustam.otus.order.service.OrderService;
 import ru.rustam.otus.rabbitmq.model.OrderMessage;
-import ru.rustam.otus.rabbitmq.service.MessageService;
+import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import static ru.rustam.otus.order.ConvertUtil.convertItemListForMessage;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final MessageService messageService;
+    private final RabbitService rabbitService;
 
     @Override
     public OrderEntity createOrder(OrderEntity order) {
@@ -29,8 +29,9 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus("CREATED");
         }
         var createdOrder = orderRepository.save(order);
-        messageService.sendOrderCreatedMessage(OrderMessage.builder()
+        rabbitService.sendOrderCreatedMessage(OrderMessage.builder()
                 .amount(order.getAmount())
+                .userName(order.getUserName())
                 .orderId(createdOrder.getOrderId())
                 .contactPhone(order.getContactPhone())
                 .deliveryAddress(order.getDeliveryAddress())
@@ -43,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderEntity getOrder(String orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+                .orElseThrow(() -> new OrderException("Order not found"));
     }
 
     @Override
@@ -63,9 +64,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void saveOrder(OrderEntity order) {
+        orderRepository.save(order);
+    }
+
+    @Override
     public void updateOrderStatus(String orderId, String newStatus) {
         var order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+                .orElseThrow(() -> new OrderException("Order not found"));
         order.setStatus(newStatus);
         orderRepository.save(order);
     }

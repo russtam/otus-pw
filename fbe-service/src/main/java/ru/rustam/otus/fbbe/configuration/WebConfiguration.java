@@ -18,11 +18,6 @@ import javax.net.ssl.HttpsURLConnection;
 public class WebConfiguration {
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
-    }
-
-    @Bean
     public SecurityFilterChain securityWebFilterChain(HttpSecurity http) throws Exception {
         HttpsURLConnection.setDefaultHostnameVerifier((s, sslSession) -> true);
         http

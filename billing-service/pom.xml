@@ -10,14 +10,19 @@
     </parent>
 
     <artifactId>billing-service</artifactId>
-    <version>v9</version>
+    <version>v11</version>
     <name>Billing service</name>
 
     <dependencies>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>rabbitmq</artifactId>
-            <version>v10</version>
+            <version>v12</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.rustam.otus</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>v1</version>
         </dependency>
 
         <dependency>
