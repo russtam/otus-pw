@@ -10,14 +10,19 @@
     </parent>
 
     <artifactId>order-service</artifactId>
-    <version>v18</version>
+    <version>v23</version>
     <name>Order service</name>
 
     <dependencies>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>rabbitmq</artifactId>
-            <version>v12</version>
+            <version>v16</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.rustam.otus</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>v3</version>
         </dependency>
 
         <dependency>
@@ -27,6 +32,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

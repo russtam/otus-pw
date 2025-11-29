@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-pg-monitor
+  labels:
+    app: {{ .Release.Name }}-pg-monitor
+spec:
+  endpoints:
+    - port: http-metrics
+      scrapeTimeout: 30s
+      path: /metrics
+      honorLabels: true
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - default
+  selector:
+    matchLabels:
+      "app.kubernetes.io/component": "metrics"
+      "app.kubernetes.io/instance": {{ .Release.Name }}
+      "app.kubernetes.io/name": "postgresql"

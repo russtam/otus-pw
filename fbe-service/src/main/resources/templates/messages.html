@@ -28,7 +28,7 @@
             <th>Сообщение</th>
         </tr>
         <tr th:each="message : ${messages}" th:object="${message}">
-            <td><p th:text="*{created}"></p></td>
+            <td><p th:text="*{#temporals.format(created, 'yyyy-MM-dd HH:mm:ss')}"></p></td>
             <td><p th:text="*{message}"></p></p></td>
         </tr>
     </table>

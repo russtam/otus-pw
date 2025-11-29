@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>fbe-service</artifactId>
-	<version>v18</version>
+	<version>v26</version>
 	<name>Frontend Backend Service</name>
 
 	<properties>
@@ -20,12 +20,12 @@
 		<dependency>
 			<groupId>ru.rustam.otus</groupId>
 			<artifactId>rabbitmq</artifactId>
-			<version>v12</version>
+			<version>v16</version>
 		</dependency>
 		<dependency>
 			<groupId>ru.rustam.otus</groupId>
 			<artifactId>common-lib</artifactId>
-			<version>v2</version>
+			<version>v3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

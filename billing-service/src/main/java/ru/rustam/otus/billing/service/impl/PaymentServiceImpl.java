@@ -12,8 +12,8 @@ import ru.rustam.otus.common.model.OrderDto;
 import ru.rustam.otus.common.service.OrderClientService;
 import ru.rustam.otus.rabbitmq.model.ClientMessage;
 import ru.rustam.otus.rabbitmq.model.FailMessage;
-import ru.rustam.otus.rabbitmq.model.OrderMessage;
-import ru.rustam.otus.rabbitmq.model.PaymentCompletedMessage;
+import ru.rustam.otus.rabbitmq.model.PaymentCreatedMessage;
+import ru.rustam.otus.rabbitmq.model.PaymentMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.time.OffsetDateTime;
@@ -30,29 +30,34 @@ import static ru.rustam.otus.common.enums.PaymentStatus.SUCCESS;
 public class PaymentServiceImpl implements PaymentService {
 
     @Value("${paymentLink}")
-    private String paymentLink;
+    private String paymentLinkPrefix;
 
     private final PaymentRepository paymentRepository;
     private final RabbitService rabbitService;
     private final OrderClientService orderClientService;
 
     @Override
-    public void createPayment(OrderMessage message) {
+    public void createPayment(String orderId) {
+        var order = orderClientService.getOrder(orderId);
         String paymentId = UUID.randomUUID().toString();
         paymentRepository.save(PaymentEntity.builder()
                 .paymentId(paymentId)
-                .orderId(message.getOrderId())
+                .orderId(orderId)
                 .paymentDate(OffsetDateTime.now())
-                .amount(message.getAmount())
+                .amount(order.getAmount())
                 .status("CREATED") //статус платежа
                 .build());
-        message.setPaymentLink(paymentLink + paymentId + "&orderId=" + message.getOrderId());
-        rabbitService.sendPaymentCreatedMessage(message);
+        String paymentLink = paymentLinkPrefix + paymentId + "&orderId=" + orderId;
+        rabbitService.sendPaymentCreatedMessage(PaymentCreatedMessage.builder()
+                .orderId(orderId)
+                .paymentId(paymentId)
+                .paymentLink(paymentLink)
+                .build());
         rabbitService.sendClientMessage(ClientMessage.builder()
-                .userName(message.getUserName())
-                .contactPhone(message.getContactPhone())
-                .email(message.getEmail())
-                .message("Создан платёж " + paymentId + ". Оплатить можно по ссылке " + message.getPaymentLink())
+                .userName(order.getUserName())
+                .contactPhone(order.getContactPhone())
+                .email(order.getEmail())
+                .message("Создан платёж " + paymentId + ". Оплатить можно по ссылке " + paymentLink)
                 .build());
     }
 
@@ -68,7 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
         if (success) {
             rabbitService.sendPaymentCompletedMessage(
-                    new PaymentCompletedMessage(payment.getOrderId(), paymentId));
+                    new PaymentMessage(payment.getOrderId(), paymentId));
             rabbitService.sendClientMessage(ClientMessage.builder()
                     .userName(order.getUserName())
                     .contactPhone(order.getContactPhone())

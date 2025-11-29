@@ -6,7 +6,7 @@ postgresql:
         username: rustam
         database: dz8_base
   metrics:
-    enabled: false
+    enabled: true
     image:
       repository: bitnamilegacy/postgres-exporter
   image:
@@ -17,17 +17,17 @@ postgresql:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: true
 
 replicaCount: 1
 
 image:
-  billingServiceImage: rustamalimuradov/billing-service:v11
-  deliveryServiceImage: rustamalimuradov/delivery-service:v12
-  orderServiceImage: rustamalimuradov/order-service:v18
-  storageServiceImage: rustamalimuradov/storage-service:v9
-  fbeServiceImage: rustamalimuradov/fbe-service:v18
-  clientMessagingServiceImage: rustamalimuradov/client-messaging-service:v3
+  orderServiceImage: rustamalimuradov/order-service:v23
+  storageServiceImage: rustamalimuradov/storage-service:v16
+  billingServiceImage: rustamalimuradov/billing-service:v17
+  deliveryServiceImage: rustamalimuradov/delivery-service:v19
+  fbeServiceImage: rustamalimuradov/fbe-service:v26
+  clientMessagingServiceImage: rustamalimuradov/client-messaging-service:v7
 
 service:
   type: ClusterIP

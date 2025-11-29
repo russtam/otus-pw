@@ -22,7 +22,11 @@
     <table style="border-spacing: 16px;">
         <tr th:each="product : ${products}" th:object="${product}">
             <td><img th:src="*{imageUrl}" alt=""/></td>
-            <td><h3 th:text="*{name}"></h3></td>
+            <td>
+                <h3 th:text="*{name}"></h3><br/>
+                Доступно: <span th:text="*{available}"></span><br/>
+                Зарезервировано:  <span th:text="*{reserved}"></span>
+            </td>
             <td><p class="price">[[*{price}]] ₽</p></td>
             <td>
                 <button class="add-to-cart" th:onclick="'addToCart(' + ${product.id} + ',' + ${product.price} + ');'">В корзину</button>

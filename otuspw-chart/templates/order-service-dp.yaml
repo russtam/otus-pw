@@ -42,6 +42,8 @@ spec:
             periodSeconds: 5
             terminationGracePeriodSeconds: 10
           env:
+            - name: TZ
+              value: Europe/Moscow
             - name: JDBC_URL
               value: jdbc:postgresql://{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.global.postgresql.auth.database }}
             - name: DB_USERNAME

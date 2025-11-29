@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.rustam.otus.delivery.db.DeliveryEntity;
 import ru.rustam.otus.delivery.db.DeliveryRepository;
 import ru.rustam.otus.delivery.service.DeliveryService;
-import ru.rustam.otus.rabbitmq.model.DeliveryCompletedMessage;
-import ru.rustam.otus.rabbitmq.model.PaymentCompletedMessage;
+import ru.rustam.otus.rabbitmq.model.SimpleMessage;
+import ru.rustam.otus.rabbitmq.model.PaymentMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.time.OffsetDateTime;
@@ -21,7 +21,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final RabbitService messageService;
 
     @Override
-    public void startDelivery(PaymentCompletedMessage message) {
+    public void startDelivery(PaymentMessage message) {
         //Доставку просто сохраним в БД
         deliveryRepository.save(DeliveryEntity.builder()
                 .deliveryDate(OffsetDateTime.now())
@@ -30,7 +30,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 .deliveryAddress("Some address")
                 .contactPhone("Contact phone")
                 .build());
-        messageService.deliveryCompletedMessage(new DeliveryCompletedMessage(message.getOrderId()));
+        messageService.deliveryCompletedMessage(new SimpleMessage(message.getOrderId()));
     }
 
 }

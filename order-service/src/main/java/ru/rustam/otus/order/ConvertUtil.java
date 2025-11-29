@@ -2,11 +2,10 @@ package ru.rustam.otus.order;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.util.CollectionUtils;
+import ru.rustam.otus.common.model.OrderDto;
+import ru.rustam.otus.common.model.OrderItemDto;
 import ru.rustam.otus.order.db.OrderEntity;
 import ru.rustam.otus.order.db.OrderItem;
-import ru.rustam.otus.order.models.OrderDto;
-import ru.rustam.otus.order.models.OrderItemDto;
-import ru.rustam.otus.rabbitmq.model.OrderItemMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +25,7 @@ public class ConvertUtil {
         dst.setItems(convertItemDtoList(src.getItems()));
         dst.setStatus(src.getStatus());
         dst.setPaymentLink(src.getPaymentLink());
+        dst.setCreated(src.getCreated());
         return dst;
     }
 
@@ -54,6 +54,7 @@ public class ConvertUtil {
         dst.setItems(convertItemList(src.getItems()));
         dst.setStatus(src.getStatus());
         dst.setPaymentLink(src.getPaymentLink());
+        dst.setCreated(src.getCreated());
         return dst;
     }
 
@@ -78,20 +79,6 @@ public class ConvertUtil {
             return Collections.emptyList();
         }
         return src.stream().map(ConvertUtil::convertItem).toList();
-    }
-
-    public static OrderItemMessage convertItemForMessage(OrderItem src) {
-        return new OrderItemMessage(src.getItemId(), src.getCount());
-    }
-
-    public static List<OrderItemMessage> convertItemListForMessage(List<OrderItem> src) {
-        if (src == null) {
-            return null;
-        }
-        if (src.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return src.stream().map(ConvertUtil::convertItemForMessage).toList();
     }
 
 }

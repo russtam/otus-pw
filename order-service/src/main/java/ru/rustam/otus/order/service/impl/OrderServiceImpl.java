@@ -8,12 +8,11 @@ import ru.rustam.otus.order.db.OrderEntity;
 import ru.rustam.otus.order.db.OrderRepository;
 import ru.rustam.otus.order.exceptions.OrderException;
 import ru.rustam.otus.order.service.OrderService;
-import ru.rustam.otus.rabbitmq.model.OrderMessage;
+import ru.rustam.otus.rabbitmq.model.SimpleMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
+import java.time.OffsetDateTime;
 import java.util.List;
-
-import static ru.rustam.otus.order.ConvertUtil.convertItemListForMessage;
 
 @Service
 @Slf4j
@@ -28,15 +27,12 @@ public class OrderServiceImpl implements OrderService {
         if (StringUtils.isBlank(order.getStatus())) {
             order.setStatus("CREATED");
         }
+        if (order.getCreated() == null) {
+            order.setCreated(OffsetDateTime.now());
+        }
         var createdOrder = orderRepository.save(order);
-        rabbitService.sendOrderCreatedMessage(OrderMessage.builder()
-                .amount(order.getAmount())
-                .userName(order.getUserName())
+        rabbitService.sendOrderCreatedMessage(SimpleMessage.builder()
                 .orderId(createdOrder.getOrderId())
-                .contactPhone(order.getContactPhone())
-                .deliveryAddress(order.getDeliveryAddress())
-                .status(order.getStatus())
-                .items(convertItemListForMessage(order.getItems()))
                 .build());
         return createdOrder;
     }

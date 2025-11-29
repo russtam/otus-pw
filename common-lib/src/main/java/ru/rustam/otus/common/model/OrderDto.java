@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import ru.rustam.otus.common.enums.OrderStatus;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -40,6 +41,8 @@ public class OrderDto {
     private String status;
 
     private String paymentLink;
+
+    private OffsetDateTime created;
 
     @JsonIgnore
     public String getPrintableStatus() {

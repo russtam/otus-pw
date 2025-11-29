@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.rustam.otus.common.model.ClientMessageDto;
+import ru.rustam.otus.common.model.OrderDto;
 import ru.rustam.otus.common.service.ClientMessageService;
 import ru.rustam.otus.common.service.OrderClientService;
 import ru.rustam.otus.fbbe.model.CartProduct;
@@ -59,7 +60,7 @@ public class MainController {
 
     @GetMapping("/profile")
     public String profile(Model model) {
-        log.debug("/profile called");
+        log.debug("/profile");
         DefaultOidcUser user = ((DefaultOidcUser) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal());
         //данные для профиля
@@ -96,7 +97,10 @@ public class MainController {
     public String orders(Model model) {
         log.debug("/orders");
         var userName = getUserName();
-        model.addAttribute("orders", fbeService.getAllClientOrders(userName));
+        var orders = fbeService.getAllClientOrders(userName);
+        log.debug("Orders received: {}", orders);
+        orders.sort(Comparator.comparing(OrderDto::getCreated).reversed());
+        model.addAttribute("orders", orders);
         return "orders";
     }
 
@@ -154,9 +158,6 @@ public class MainController {
         var userName = getUserName();
         log.debug("/api/addToCart user={}, productId={}, price={}", userName, productId, price);
         cartService.addToCart(userName, productId, 1, price);
-    }
-
-    public record OAttribute(String name, String value) {
     }
 
     private String getUserName() {

@@ -42,6 +42,8 @@ spec:
             periodSeconds: 5
             terminationGracePeriodSeconds: 10
           env:
+            - name: TZ
+              value: Europe/Moscow
             - name: ORDER_SERVICE_HOST
               value: "{{ .Release.Name }}-order-service-svc"
             - name: STORAGE_SERVICE_HOST

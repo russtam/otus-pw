@@ -21,15 +21,17 @@ public class DataInitialization {
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
         log.debug("Application ready");
-        if (storageItemRepository.count() <= 0) {
-            //инициализируем тестовыми данными
-            List<StorageItemEntity> testDataList = List.of(
-                    new StorageItemEntity("PlayStation 5", BigDecimal.valueOf(90000), 100, 0, "/images/cat.jpeg"),
-                    new StorageItemEntity("SteamDeck", BigDecimal.valueOf(50000), 10, 0, "/images/cat.jpeg"),
-                    new StorageItemEntity("X-BOX 360", BigDecimal.valueOf(100000), 20, 0, "/images/cat.jpeg")
-            );
-            storageItemRepository.saveAllAndFlush(testDataList);
-        }
+        storageItemRepository.deleteAll();
+        //инициализируем тестовыми данными
+        List<StorageItemEntity> testDataList = List.of(
+                new StorageItemEntity("Китайский музыкальный инструмент Эрху", BigDecimal.valueOf(5213), 10, 0, "/images/1.png"),
+                new StorageItemEntity("Проектор фильмов BYINTEK 4K", BigDecimal.valueOf(12357), 20, 0, "/images/2.png"),
+                new StorageItemEntity("Серьги пусеты", BigDecimal.valueOf(219), 100, 0, "/images/3.png"),
+                new StorageItemEntity("Инквизитор Рейвенор. Абнетт Дэн", BigDecimal.valueOf(1487), 25, 0, "/images/4.png"),
+                new StorageItemEntity("Аквариум для рыбок круглый", BigDecimal.valueOf(571), 25, 0, "/images/5.png"),
+                new StorageItemEntity("Кисточка для пупка", BigDecimal.valueOf(437), 100, 0, "/images/6.png")
+        );
+        storageItemRepository.saveAllAndFlush(testDataList);
     }
 
 }

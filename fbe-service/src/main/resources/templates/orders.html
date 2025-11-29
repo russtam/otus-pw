@@ -21,12 +21,14 @@
 
     <table style="border-spacing: 16px;">
         <tr>
+            <th>Дата и время заказа</th>
             <th>Номер заказа</th>
             <th>Сумма заказа</th>
             <th>Статус</th>
             <th></th>
         </tr>
         <tr th:each="order : ${orders}" th:object="${order}">
+            <td><p th:text="*{#temporals.format(created, 'yyyy-MM-dd HH:mm:ss')}"></p></td>
             <td><p th:text="*{orderId}"></p></td>
             <td><p class="price">[[*{amount}]] ₽</p></td>
             <td><p th:text="*{printableStatus}"></p></td>

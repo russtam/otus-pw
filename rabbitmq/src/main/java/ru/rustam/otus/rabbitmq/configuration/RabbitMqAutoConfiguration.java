@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.CLIENT_MESSAGE_QUEUE;
-import static ru.rustam.otus.rabbitmq.configuration.QueueConst.DELIVERY_COMPLETED_QUEUE;
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.FANOUT_EXCHANGE_POSTFIX;
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.ORDER_CREATED_QUEUE;
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.ORDER_RESERVED_QUEUE;
@@ -27,7 +26,7 @@ import static ru.rustam.otus.rabbitmq.configuration.QueueConst.PAYMENT_RESULT_QU
 public class RabbitMqAutoConfiguration {
 
     private static final List<String> QUEUES =
-            List.of(ORDER_CREATED_QUEUE, ORDER_RESERVED_QUEUE, PAYMENT_COMPLETED_QUEUE, DELIVERY_COMPLETED_QUEUE,
+            List.of(ORDER_CREATED_QUEUE, ORDER_RESERVED_QUEUE, PAYMENT_COMPLETED_QUEUE,
                     CLIENT_MESSAGE_QUEUE, PAYMENT_RESULT_QUEUE);
 
     @Autowired

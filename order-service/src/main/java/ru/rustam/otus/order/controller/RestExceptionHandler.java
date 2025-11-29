@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.rustam.otus.common.model.ErrorDto;
 import ru.rustam.otus.order.exceptions.OrderException;
-import ru.rustam.otus.order.models.ErrorDto;
 
 @RestControllerAdvice
 @Slf4j

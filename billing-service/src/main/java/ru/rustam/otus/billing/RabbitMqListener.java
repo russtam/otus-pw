@@ -6,8 +6,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import ru.rustam.otus.billing.service.PaymentService;
 import ru.rustam.otus.rabbitmq.model.FailMessage;
-import ru.rustam.otus.rabbitmq.model.OrderMessage;
 import ru.rustam.otus.rabbitmq.model.PaymentResultMessage;
+import ru.rustam.otus.rabbitmq.model.SimpleMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.ORDER_RESERVED_QUEUE;
@@ -24,17 +24,16 @@ public class RabbitMqListener {
     private final RabbitService rabbitService;
 
     @RabbitListener(queues = ORDER_RESERVED_QUEUE)
-    public void messageListener(OrderMessage message) {
+    public void messageListener(SimpleMessage message) {
         try {
             log.debug("From {} received: {}", ORDER_RESERVED_QUEUE, message);
-            paymentService.createPayment(message);
+            paymentService.createPayment(message.getOrderId());
             log.info("Order with id={} is payed", message.getOrderId());
         } catch (Exception e) {
             log.error("Exception while making payment for order {}", message.getOrderId(), e);
             FailMessage failMessage = new FailMessage();
             failMessage.setOrderId(message.getOrderId());
             failMessage.setError("Payment error: " + e);
-            failMessage.setOrder(message);
             failMessage.setSource(SOURCE);
             rabbitService.sendFailMessage(failMessage);
         }

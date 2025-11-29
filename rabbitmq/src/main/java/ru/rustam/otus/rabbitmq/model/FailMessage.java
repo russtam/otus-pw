@@ -9,5 +9,4 @@ public class FailMessage {
     private String orderId;
     private String error;
     private String source;
-    private OrderMessage order;
 }

@@ -10,14 +10,14 @@
     </parent>
 
     <artifactId>delivery-service</artifactId>
-    <version>v12</version>
+    <version>v19</version>
     <name>Delivery service</name>
 
     <dependencies>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>rabbitmq</artifactId>
-            <version>v12</version>
+            <version>v16</version>
         </dependency>
 
         <dependency>
@@ -27,6 +27,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -99,7 +103,7 @@
                         <image>rustamalimuradov/${project.artifactId}:${project.version}</image>
                     </to>
                     <container>
-                        <mainClass>ru.rustam.otus.delivery.MessagingServiceApp</mainClass>
+                        <mainClass>ru.rustam.otus.delivery.DeliveryServiceApp</mainClass>
                         <ports>
                             <port>8000</port>
                         </ports>

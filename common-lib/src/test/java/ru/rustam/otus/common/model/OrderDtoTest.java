@@ -1,11 +1,11 @@
-package ru.rustam.otus.order.models;
+package ru.rustam.otus.common.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 class OrderDtoTest {
 

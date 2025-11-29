@@ -1,18 +1,19 @@
 package ru.rustam.otus.rabbitmq.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import ru.rustam.otus.rabbitmq.model.ClientMessage;
-import ru.rustam.otus.rabbitmq.model.DeliveryCompletedMessage;
 import ru.rustam.otus.rabbitmq.model.FailMessage;
-import ru.rustam.otus.rabbitmq.model.OrderMessage;
-import ru.rustam.otus.rabbitmq.model.PaymentCompletedMessage;
+import ru.rustam.otus.rabbitmq.model.PaymentCreatedMessage;
+import ru.rustam.otus.rabbitmq.model.PaymentMessage;
 import ru.rustam.otus.rabbitmq.model.PaymentResultMessage;
+import ru.rustam.otus.rabbitmq.model.SimpleMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.CLIENT_MESSAGE_QUEUE;
-import static ru.rustam.otus.rabbitmq.configuration.QueueConst.DELIVERY_COMPLETED_QUEUE;
+import static ru.rustam.otus.rabbitmq.configuration.QueueConst.DELIVERY_COMPLETED_FANOUT_EXCHANGE;
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.FAIL_FANOUT_EXCHANGE;
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.ORDER_CREATED_QUEUE;
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.ORDER_RESERVED_QUEUE;
@@ -22,6 +23,7 @@ import static ru.rustam.otus.rabbitmq.configuration.QueueConst.PAYMENT_RESULT_QU
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RabbitServiceImpl implements RabbitService {
 
     private final RabbitTemplate rabbitTemplate;
@@ -30,41 +32,50 @@ public class RabbitServiceImpl implements RabbitService {
     public void sendFailMessage(FailMessage message) {
         //Отправляем в Fanout exchange, кому надо прибиндятся к нему
         rabbitTemplate.convertAndSend(FAIL_FANOUT_EXCHANGE, "", message);
+        log.debug("Sent to {}: {}", FAIL_FANOUT_EXCHANGE, message);
     }
 
     @Override
-    public void sendPaymentCreatedMessage(OrderMessage message) {
+    public void sendPaymentCreatedMessage(PaymentCreatedMessage message) {
         //Отправляем в Fanout exchange, кому надо прибиндятся к нему
         rabbitTemplate.convertAndSend(PAYMENT_CREATED_FANOUT_EXCHANGE, "", message);
+        log.debug("Sent to {}: {}", PAYMENT_CREATED_FANOUT_EXCHANGE, message);
     }
 
     @Override
-    public void sendOrderCreatedMessage(OrderMessage message) {
+    public void sendOrderCreatedMessage(SimpleMessage message) {
         rabbitTemplate.convertAndSend(ORDER_CREATED_QUEUE, message);
+        log.debug("Sent to {}: {}", ORDER_CREATED_QUEUE, message);
     }
 
     @Override
-    public void sendOrderReservedMessage(OrderMessage message) {
+    public void sendOrderReservedMessage(SimpleMessage message) {
         rabbitTemplate.convertAndSend(ORDER_RESERVED_QUEUE, message);
+        log.debug("Sent to {}: {}", ORDER_RESERVED_QUEUE, message);
     }
 
     @Override
-    public void sendPaymentCompletedMessage(PaymentCompletedMessage message) {
+    public void sendPaymentCompletedMessage(PaymentMessage message) {
         rabbitTemplate.convertAndSend(PAYMENT_COMPLETED_QUEUE, message);
+        log.debug("Sent to {}: {}", PAYMENT_COMPLETED_QUEUE, message);
     }
 
     @Override
-    public void deliveryCompletedMessage(DeliveryCompletedMessage message) {
-        rabbitTemplate.convertAndSend(DELIVERY_COMPLETED_QUEUE, message);
+    public void deliveryCompletedMessage(SimpleMessage message) {
+        rabbitTemplate.convertAndSend(DELIVERY_COMPLETED_FANOUT_EXCHANGE, "", message);
+        log.debug("Sent to {}: {}", DELIVERY_COMPLETED_FANOUT_EXCHANGE, message);
     }
 
     @Override
     public void sendClientMessage(ClientMessage message) {
         rabbitTemplate.convertAndSend(CLIENT_MESSAGE_QUEUE, message);
+        log.debug("Sent to {}: {}", CLIENT_MESSAGE_QUEUE, message);
     }
 
     @Override
     public void sendPaymentResultMessage(PaymentResultMessage message) {
         rabbitTemplate.convertAndSend(PAYMENT_RESULT_QUEUE, message);
+        log.debug("Sent to {}: {}", PAYMENT_RESULT_QUEUE, message);
     }
+
 }

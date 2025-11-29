@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentCompletedMessage {
+public class SimpleMessage {
     private String orderId;
-    private String paymentId;
 }
