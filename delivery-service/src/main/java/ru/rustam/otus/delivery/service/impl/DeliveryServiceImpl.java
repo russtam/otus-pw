@@ -1,6 +1,7 @@
 package ru.rustam.otus.delivery.service.impl;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class DeliveryServiceImpl implements DeliveryService {
     @PostConstruct
     public void postConstruct() {
         executorService = new ScheduledThreadPoolExecutor(2);
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        executorService.shutdown();
     }
 
     @Override
