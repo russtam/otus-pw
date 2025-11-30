@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>fbe-service</artifactId>
-	<version>v27</version>
+	<version>v29</version>
 	<name>Frontend Backend Service</name>
 
 	<properties>
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>ru.rustam.otus</groupId>
 			<artifactId>rabbitmq</artifactId>
-			<version>v17</version>
+			<version>v18</version>
 		</dependency>
 		<dependency>
 			<groupId>ru.rustam.otus</groupId>

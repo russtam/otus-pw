@@ -13,6 +13,7 @@ import ru.rustam.otus.rabbitmq.model.SimpleMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class DeliveryServiceImpl implements DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
-    private final RabbitService messageService;
+    private final RabbitService rabbitService;
     private ScheduledExecutorService executorService;
 
     @PostConstruct
@@ -39,10 +40,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public void startDelivery(PaymentMessage message) {
         final var simpleMessage = new SimpleMessage(message.getOrderId());
-        messageService.deliveryStartedMessage(simpleMessage);
+        rabbitService.deliveryStartedMessage(simpleMessage);
         //Доставку просто сохраним в БД
         final var delivery = deliveryRepository.save(DeliveryEntity.builder()
-                .deliveryDate(OffsetDateTime.now())
+                .deliveryDate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.ofHours(3)))
                 .orderId(message.getOrderId())
                 .status("READY")
                 .deliveryAddress("Some address")
@@ -51,7 +52,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         //Эмулируем что через 30 секунд доставка завершится
         executorService.schedule(() -> {
             delivery.setStatus("DELIVERED");
-            messageService.deliveryCompletedMessage(simpleMessage);
+            rabbitService.deliveryCompletedMessage(simpleMessage);
         }, 30, TimeUnit.SECONDS);
     }
 

@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "messages_tbl")
@@ -40,6 +41,6 @@ public class MessageEntity {
 
     private String message;
 
-    private OffsetDateTime created = OffsetDateTime.now();
+    private OffsetDateTime created = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.ofHours(3));
 
 }

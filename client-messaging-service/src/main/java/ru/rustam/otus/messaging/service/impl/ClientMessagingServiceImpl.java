@@ -11,6 +11,7 @@ import ru.rustam.otus.messaging.service.ClientMessagingService;
 import ru.rustam.otus.rabbitmq.model.ClientMessage;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ClientMessagingServiceImpl implements ClientMessagingService {
                 .contactPhone(message.getContactPhone())
                 .email(message.getEmail())
                 .message(message.getMessage())
-                .created(OffsetDateTime.now())
+                .created(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.ofHours(3)))
                 .build());
     }
 

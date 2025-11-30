@@ -13,6 +13,7 @@ import ru.rustam.otus.rabbitmq.model.SimpleMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(OrderStatus.CREATED.name());
         }
         if (order.getCreated() == null) {
-            order.setCreated(OffsetDateTime.now());
+            order.setCreated(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.ofHours(3)));
         }
         var createdOrder = orderRepository.save(order);
         rabbitService.sendOrderCreatedMessage(SimpleMessage.builder()

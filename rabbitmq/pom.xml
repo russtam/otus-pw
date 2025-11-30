@@ -10,10 +10,14 @@
     </parent>
 
     <artifactId>rabbitmq</artifactId>
-    <version>v17</version>
+    <version>v18</version>
     <name>RabbitMQ Library</name>
 
     <dependencies>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>

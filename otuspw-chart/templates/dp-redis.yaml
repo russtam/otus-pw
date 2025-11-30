@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-redis-dp
+  labels:
+    app: {{ .Release.Name }}-redis-dp
+spec:
+  replicas: 1
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      env: {{ .Release.Name }}-redis-pw
+  template:
+    metadata:
+      labels:
+        env: {{ .Release.Name }}-redis-pw
+    spec:
+      containers:
+        - name: otus-redis-pw
+          image: {{ .Values.redis.image.name }}
+          ports:
+            - containerPort: 6379

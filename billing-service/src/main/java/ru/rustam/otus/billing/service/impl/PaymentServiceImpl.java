@@ -17,6 +17,7 @@ import ru.rustam.otus.rabbitmq.model.PaymentMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 import static ru.rustam.otus.billing.RabbitMqListener.SOURCE;
@@ -43,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(PaymentEntity.builder()
                 .paymentId(paymentId)
                 .orderId(orderId)
-                .paymentDate(OffsetDateTime.now())
+                .paymentDate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.ofHours(3)))
                 .amount(order.getAmount())
                 .status("CREATED") //статус платежа
                 .build());

@@ -15,6 +15,10 @@ postgresql:
     image:
       repository: bitnamilegacy/bitnami-shell
 
+redis:
+  image:
+    name: redis:8.2.3
+
 metrics:
   serviceMonitor:
     enabled: true
@@ -22,12 +26,12 @@ metrics:
 replicaCount: 1
 
 image:
-  orderServiceImage: rustamalimuradov/order-service:v24
-  storageServiceImage: rustamalimuradov/storage-service:v16
-  billingServiceImage: rustamalimuradov/billing-service:v17
-  deliveryServiceImage: rustamalimuradov/delivery-service:v20
-  fbeServiceImage: rustamalimuradov/fbe-service:v27
-  clientMessagingServiceImage: rustamalimuradov/client-messaging-service:v7
+  orderServiceImage: rustamalimuradov/order-service:v29
+  storageServiceImage: rustamalimuradov/storage-service:v17
+  billingServiceImage: rustamalimuradov/billing-service:v18
+  deliveryServiceImage: rustamalimuradov/delivery-service:v23
+  fbeServiceImage: rustamalimuradov/fbe-service:v29
+  clientMessagingServiceImage: rustamalimuradov/client-messaging-service:v8
 
 service:
   type: ClusterIP

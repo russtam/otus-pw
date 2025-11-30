@@ -10,6 +10,7 @@ import ru.rustam.otus.rabbitmq.model.PaymentCreatedMessage;
 import ru.rustam.otus.rabbitmq.model.PaymentMessage;
 import ru.rustam.otus.rabbitmq.model.PaymentResultMessage;
 import ru.rustam.otus.rabbitmq.model.SimpleMessage;
+import ru.rustam.otus.rabbitmq.service.RabbitMetricsService;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import static ru.rustam.otus.rabbitmq.configuration.QueueConst.CLIENT_MESSAGE_QUEUE;
@@ -29,11 +30,13 @@ public class RabbitServiceImpl implements RabbitService {
 
     private static final String SENT_LOG = "Sent to {}: {}";
     private final RabbitTemplate rabbitTemplate;
+    private final RabbitMetricsService rabbitMetricsService;
 
     @Override
     public void sendFailMessage(FailMessage message) {
         //Отправляем в Fanout exchange, кому надо прибиндятся к нему
         rabbitTemplate.convertAndSend(FAIL_FANOUT_EXCHANGE, "", message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, FAIL_FANOUT_EXCHANGE, message);
     }
 
@@ -41,48 +44,56 @@ public class RabbitServiceImpl implements RabbitService {
     public void sendPaymentCreatedMessage(PaymentCreatedMessage message) {
         //Отправляем в Fanout exchange, кому надо прибиндятся к нему
         rabbitTemplate.convertAndSend(PAYMENT_CREATED_FANOUT_EXCHANGE, "", message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, PAYMENT_CREATED_FANOUT_EXCHANGE, message);
     }
 
     @Override
     public void sendOrderCreatedMessage(SimpleMessage message) {
         rabbitTemplate.convertAndSend(ORDER_CREATED_QUEUE, message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, ORDER_CREATED_QUEUE, message);
     }
 
     @Override
     public void sendOrderReservedMessage(SimpleMessage message) {
         rabbitTemplate.convertAndSend(ORDER_RESERVED_QUEUE, message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, ORDER_RESERVED_QUEUE, message);
     }
 
     @Override
     public void sendPaymentCompletedMessage(PaymentMessage message) {
         rabbitTemplate.convertAndSend(PAYMENT_COMPLETED_QUEUE, message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, PAYMENT_COMPLETED_QUEUE, message);
     }
 
     @Override
     public void deliveryCompletedMessage(SimpleMessage message) {
         rabbitTemplate.convertAndSend(DELIVERY_COMPLETED_FANOUT_EXCHANGE, "", message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, DELIVERY_COMPLETED_FANOUT_EXCHANGE, message);
     }
 
     @Override
     public void deliveryStartedMessage(SimpleMessage message) {
         rabbitTemplate.convertAndSend(DELIVERY_STARTED_QUEUE, message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, DELIVERY_STARTED_QUEUE, message);
     }
 
     @Override
     public void sendClientMessage(ClientMessage message) {
         rabbitTemplate.convertAndSend(CLIENT_MESSAGE_QUEUE, message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, CLIENT_MESSAGE_QUEUE, message);
     }
 
     @Override
     public void sendPaymentResultMessage(PaymentResultMessage message) {
         rabbitTemplate.convertAndSend(PAYMENT_RESULT_QUEUE, message);
+        rabbitMetricsService.increaseMessageSent();
         log.debug(SENT_LOG, PAYMENT_RESULT_QUEUE, message);
     }
 

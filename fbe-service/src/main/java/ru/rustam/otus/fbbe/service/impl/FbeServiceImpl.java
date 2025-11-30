@@ -14,6 +14,7 @@ import ru.rustam.otus.rabbitmq.model.ClientMessage;
 import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -48,7 +49,7 @@ public class FbeServiceImpl implements FbeService {
                 .email(user.getEmail())
                 .amount(cart.calculateAmount())
                 .items(items)
-                .created(OffsetDateTime.now())
+                .created(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.ofHours(3)))
                 .build();
         orderClientService.createOrder(orderDto);
         cartService.clearCart(userName);

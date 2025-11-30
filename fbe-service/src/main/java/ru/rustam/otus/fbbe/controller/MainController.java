@@ -24,6 +24,7 @@ import ru.rustam.otus.rabbitmq.service.RabbitService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
@@ -99,6 +100,9 @@ public class MainController {
         var userName = getUserName();
         var orders = fbeService.getAllClientOrders(userName);
         log.debug("Orders received: {}", orders);
+        for (OrderDto order : orders) {
+            order.setCreated(order.getCreated().withOffsetSameInstant(ZoneOffset.ofHours(3)));
+        }
         orders.sort(Comparator.comparing(OrderDto::getCreated).reversed());
         model.addAttribute("orders", orders);
         return "orders";
@@ -109,6 +113,9 @@ public class MainController {
         log.debug("/messages");
         var userName = getUserName();
         var clientMessages = clientMessageService.getAllClientMessages(userName);
+        for (ClientMessageDto msg : clientMessages) {
+            msg.setCreated(msg.getCreated().withOffsetSameInstant(ZoneOffset.ofHours(3)));
+        }
         clientMessages.sort(Comparator.comparing(ClientMessageDto::getCreated));
         model.addAttribute("messages", clientMessages);
         return "messages";

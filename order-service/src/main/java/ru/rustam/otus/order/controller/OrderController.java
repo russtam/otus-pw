@@ -2,6 +2,7 @@ package ru.rustam.otus.order.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order")
+    @Cacheable(value = "createOrderCache", key = "#order.orderId")
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto order) {
         log.debug("createOrder: {}", order);
         var savedEntity = orderService.createOrder(ConvertUtil.convertOrder(order));
