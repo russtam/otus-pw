@@ -17,5 +17,5 @@ public class QueueConst {
     public static final String PAYMENT_COMPLETED_QUEUE = "PaymentCompletedQueue";
     public static final String CLIENT_MESSAGE_QUEUE = "ClientMessageQueue";
     public static final String PAYMENT_RESULT_QUEUE = "PaymentResultQueue";
-
+    public static final String DELIVERY_STARTED_QUEUE = "DeliveryStartedQueue";
 }

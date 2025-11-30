@@ -19,6 +19,8 @@ public interface RabbitService {
 
     void sendPaymentCompletedMessage(PaymentMessage message);
 
+    void deliveryStartedMessage(SimpleMessage message);
+
     void deliveryCompletedMessage(SimpleMessage message);
 
     void sendClientMessage(ClientMessage message);

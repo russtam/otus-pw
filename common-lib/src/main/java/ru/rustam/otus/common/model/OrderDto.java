@@ -51,6 +51,7 @@ public class OrderDto {
             case OrderStatus.CANCELED -> "Отменён";
             case OrderStatus.COMPLETED -> "Завершён";
             case OrderStatus.AWAIT_PAYMENT -> "Ожидает оплаты";
+            case OrderStatus.AWAIT_DELIVERY -> "Ожидает доставки";
             default -> status;
         };
     }

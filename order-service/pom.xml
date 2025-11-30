@@ -10,19 +10,19 @@
     </parent>
 
     <artifactId>order-service</artifactId>
-    <version>v23</version>
+    <version>v24</version>
     <name>Order service</name>
 
     <dependencies>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>rabbitmq</artifactId>
-            <version>v16</version>
+            <version>v17</version>
         </dependency>
         <dependency>
             <groupId>ru.rustam.otus</groupId>
             <artifactId>common-lib</artifactId>
-            <version>v3</version>
+            <version>v4</version>
         </dependency>
 
         <dependency>

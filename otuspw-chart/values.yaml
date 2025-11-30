@@ -22,11 +22,11 @@ metrics:
 replicaCount: 1
 
 image:
-  orderServiceImage: rustamalimuradov/order-service:v23
+  orderServiceImage: rustamalimuradov/order-service:v24
   storageServiceImage: rustamalimuradov/storage-service:v16
   billingServiceImage: rustamalimuradov/billing-service:v17
-  deliveryServiceImage: rustamalimuradov/delivery-service:v19
-  fbeServiceImage: rustamalimuradov/fbe-service:v26
+  deliveryServiceImage: rustamalimuradov/delivery-service:v20
+  fbeServiceImage: rustamalimuradov/fbe-service:v27
   clientMessagingServiceImage: rustamalimuradov/client-messaging-service:v7
 
 service:

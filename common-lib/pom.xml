@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>common-lib</artifactId>
-    <version>v3</version>
+    <version>v4</version>
     <name>Common library</name>
 
     <dependencies>

@@ -4,6 +4,7 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.rustam.otus.common.enums.OrderStatus;
 import ru.rustam.otus.order.db.OrderEntity;
 import ru.rustam.otus.order.db.OrderRepository;
 import ru.rustam.otus.order.exceptions.OrderException;
@@ -25,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderEntity createOrder(OrderEntity order) {
         if (StringUtils.isBlank(order.getStatus())) {
-            order.setStatus("CREATED");
+            order.setStatus(OrderStatus.CREATED.name());
         }
         if (order.getCreated() == null) {
             order.setCreated(OffsetDateTime.now());

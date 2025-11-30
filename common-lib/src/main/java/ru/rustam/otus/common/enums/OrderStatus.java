@@ -5,5 +5,5 @@ public enum OrderStatus {
     CANCELED,
     COMPLETED,
     AWAIT_PAYMENT,
-    ;
+    AWAIT_DELIVERY;
 }
