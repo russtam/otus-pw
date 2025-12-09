@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  db.yaml: |
+    spring:
+      datasource:
+        url: ${JDBC_URL}
+        username: ${DB_USERNAME}
+        password: ${.DB_PASSWORD}
+        hikari:
+          connection-timeout: 10000
+          minimum-idle: 1
+          maximum-pool-size: 5
+          idle-timeout: 600000
+          max-lifetime: 1800000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect

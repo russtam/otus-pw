@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-delivery-service-mon
+  labels:
+    app: {{ .Release.Name }}-delivery-service-mon
+spec:
+  endpoints:
+    - port: metrics
+      scrapeTimeout: 30s
+      path: /actuator/prometheus
+      honorLabels: true
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - default
+  selector:
+    matchLabels:
+      env: {{ .Release.Name }}-delivery-service-svc
+  

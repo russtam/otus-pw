@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+</head>
+<body>
+<center>
+    <h1>ИНТЕРНЕТ МАГАЗИН</h1>
+    <br/>
+    <table width="60%" align="center">
+        <tr>
+            <th><a href="/index">Каталог</a></th>
+            <th><a href="/profile">Профиль</a></th>
+            <th><a href="/orders">Заказы</a></th>
+            <th><a href="/logout">Выход</a></th>
+        </tr>
+    </table>
+    <br/>
+    <h2>Корзина</h2>
+    <br/>
+    <table style="border-spacing: 16px;">
+        <tr>
+            <th>Наименование</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Сумма</th>
+        </tr>
+        <tr th:each="product : ${products}" th:object="${product}">
+            <td><p th:text="*{name}"></p></td>
+            <td><p class="price">[[*{price}]] ₽</p></td>
+            <td align="center"><p th:text="*{count}"></p></td>
+            <td><p class="price">[[*{sum}]] ₽</p></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Итого</td>
+            <td><p class="price">[[${sum}]] ₽</p></td>
+        </tr>
+    </table>
+    <br/>
+    <form th:if="${products.size() > 0}" action="createOrder">
+        <input class="add-to-cart" type="submit" value="Оформить заказ" />
+    </form>
+</center>
+
+<script th:src="@{/js/app.js}" type="text/javascript"></script>
+</body>
+</html>

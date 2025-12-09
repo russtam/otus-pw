@@ -1,0 +1,59 @@
+appCfgPath: ${APP_CONFIG_PATH:/config}
+
+orderServiceHost: "http://${ORDER_SERVICE_HOST:otuspw-order-service-svc}:8000"
+storageServiceHost: "http://${STORAGE_SERVICE_HOST:otuspw-storage-service-svc}:8000"
+
+spring:
+  application:
+    name: fbbe
+  thymeleaf:
+    excluded-view-names:
+      - /api/*
+      - /actuator/*
+  #config:
+    #import:
+    #  - file:${appCfgPath}/db.yaml
+  rabbitmq:
+    connection-timeout: 10000
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+  security:
+    oauth2:
+      client:
+        provider:
+          external:
+            issuer-uri: ${KEYCLOAK_ISSUER_URI}
+        registration:
+          external:
+            provider: ${KEYCLOAK_PROVIDER}
+            client-name: ${KEYCLOAK_CLIENT_NAME}
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: ${KEYCLOAK_SECRET}
+            scope: openid,offline_access,profile,deliveryAddress
+            authorization-grant-type: authorization_code
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    distribution:
+      slo:
+        http.server.requests: 10ms, 50ms, 100ms, 200ms, 300ms, 400ms, 500ms, 600ms, 800ms
+    export:
+      prometheus:
+        enabled: true
+
+server:
+  port: ${APP_HTTP_PORT:8000}
+
+logging:
+  level:
+    root: "info"
+    ru.rustam: "debug"

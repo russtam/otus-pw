@@ -1,0 +1,15 @@
+helm install otuspw otuspw-chart
+helm install otuspw otuspw-chart --dry-run
+helm uninstall otuspw
+kubectl delete pvc data-otuspw-postgresql-0
+
+http://grafana.192.168.49.2.nip.io/explore?schemaVersion=1&panes=%7B%2284m%22:%7B%22datasource%22:%22ef6l3pqnm9n9cd%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bnamespace%3D%5C%22default%5C%22,%20app%3D~%5C%22otuspw.%2A%5C%22%7D%20%7C%3D%20%60%60%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22ef6l3pqnm9n9cd%22%7D,%22editorMode%22:%22builder%22,%22direction%22:%22backward%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D,%22panelsState%22:%7B%22logs%22:%7B%22visualisationType%22:%22logs%22,%22displayedFields%22:%5B%22pod%22%5D%7D%7D,%22compact%22:false%7D%7D&orgId=1
+
+---------
+helm repo add loki https://grafana.github.io/loki/charts
+helm repo update
+kubectl create namespace loki
+helm install loki grafana/loki-stack --namespace loki --set grafana.enabled=false --set loki.enabled=true --set promtail.enabled=true
+helm install loki grafana/loki-stack --namespace default --set grafana.enabled=false --set loki.enabled=true --set promtail.enabled=true
+
+helm install loki grafana/loki-stack --namespace default --set loki.image.tag=2.9.3 --set grafana.enabled=false --set loki.enabled=true --set promtail.enabled=true
