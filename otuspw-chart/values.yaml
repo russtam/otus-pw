@@ -26,7 +26,7 @@ metrics:
 replicaCount: 1
 
 image:
-  orderServiceImage: rustamalimuradov/order-service:v29
+  orderServiceImage: rustamalimuradov/order-service:v30
   storageServiceImage: rustamalimuradov/storage-service:v17
   billingServiceImage: rustamalimuradov/billing-service:v18
   deliveryServiceImage: rustamalimuradov/delivery-service:v23

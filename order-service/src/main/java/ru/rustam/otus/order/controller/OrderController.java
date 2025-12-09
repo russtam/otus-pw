@@ -25,10 +25,10 @@ public class OrderController {
 
     @PostMapping("/order")
     @Cacheable(value = "createOrderCache", key = "#order.orderId")
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto order) {
+    public OrderDto createOrder(@RequestBody OrderDto order) {
         log.debug("createOrder: {}", order);
         var savedEntity = orderService.createOrder(ConvertUtil.convertOrder(order));
-        return ResponseEntity.ok(ConvertUtil.convertOrder(savedEntity));
+        return ConvertUtil.convertOrder(savedEntity);
     }
 
     @GetMapping("/order/{orderId}")
